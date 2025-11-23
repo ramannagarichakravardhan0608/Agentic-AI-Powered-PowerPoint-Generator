@@ -1,0 +1,118 @@
+{
+  "name": "ai ppt generator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "82806573-ad5c-4d12-95ac-30d9107686d3",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -208,
+        -80
+      ],
+      "id": "1f93ca9b-8007-4dcb-967e-a8e815604925",
+      "name": "Webhook",
+      "webhookId": "82806573-ad5c-4d12-95ac-30d9107686d3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Python-pptx code generator.\n\nBased on the information provided below, generate Python code using the python-pptx library to create a PowerPoint presentation.\n\nDetails:\n{{ $json.body.prompt }}\n\nRequirements:\n• Output ONLY Python code — no explanations.\n• Include all necessary imports.\n• Create a clean PowerPoint with no overlapping text.\n• Use slide layout 1 (Title and Content) for all slides.\n• Each slide must have a title and bullet points.\n• Add proper spacing to avoid text collisions.\n• Do NOT include any code or message about saving the file.\n• The final line of code must be: \n    prs.save(\"presentation.pptx\")\n",
+        "options": {
+          "systemMessage": "you are a helpful assistant and you have a 10+ years experience in creating ppt based n a topic given"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        0,
+        -80
+      ],
+      "id": "0393f450-7e16-46e5-8c1d-a35d6c8dd1b9",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        128
+      ],
+      "id": "5505ea37-50b5-4992-a08b-3b09e177118a",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "4ZQs0IBHxSUG9XQx",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        352,
+        -80
+      ],
+      "id": "4a57761b-0d87-4e1b-979b-0a9e3c71969f",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c90418e8-235a-49dc-82d4-bf0bc25d0d35",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "973f63faf7057da281fd1bde3a0f115cbfb54dfb38a1b4f9227bb1910fa5726a"
+  },
+  "id": "oknB9axRVo5xnGho",
+  "tags": []
+}
